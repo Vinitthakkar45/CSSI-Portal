@@ -1,0 +1,33 @@
+<%- include('../../partials/faculty/header', { title: 'Faculty Sign Up' }) %>
+
+<div class="container">
+  <h2>Faculty Sign Up</h2>
+  <form action="/faculty/register" method="POST">
+    <div class="form-group">
+      <label for="first_name">First Name:</label>
+      <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter your first name" required>
+    </div>
+    <div class="form-group">
+      <label for="last_name">Last Name:</label>
+      <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter your last name" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Your university email (must end with @sot.pdpu.ac.in)" required >
+        <small id="emailError" class="text-danger"></small>
+    </div>
+  
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+        <small id="passwordError" class="text-danger"></small> 
+    </div>
+    <div class="form-group">
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+  </form>
+</div>
+
+<%- include('../../partials/footer') %>
