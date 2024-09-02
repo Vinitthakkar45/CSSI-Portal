@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import supabase from '../supabaseClient.js';
+import { signUp } from './signup.js'; 
 
 const postregisterFacultyController = async (req, res) => {
     const { first_name, last_name, email, password, confirmPassword } = req.body;
@@ -21,7 +22,8 @@ const postregisterFacultyController = async (req, res) => {
     const {data: existing_email, error: email_error} =await supabase
         .from('faculty')
         .select('*')
-        .eq('email', email);
+        .eq('email', email)
+        .single();
     
     if(existing_email){
         return res.status(400).json({ message: 'User already exists.' });
@@ -29,15 +31,29 @@ const postregisterFacultyController = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const { data:insert_data, error: insert_error } = await supabase
-        .from('faculty')
-        .insert([{ first_name, last_name, email, password: hashedPassword }]);
+    const { data: user, error: authError } = await supabase.auth.signUp({
+        email: email,
+        password: hashedPassword,
+        options: {
+            data: {
+                first_name,
+                last_name,
+            },
+        },
+    });
 
-    if (insert_error) {
-        return res.status(500).json({ message: 'Error registering user.' });
-    }
-    res.status(201).json({ message: 'User registered successfully.' });
+    const { data: insert_data, error: insert_error } = await supabase
+        .from('faculty')
+        .insert([{ 
+            first_name, 
+            last_name, 
+            email, 
+            password: hashedPassword 
+        }]);
+
+    res.status(201).json({ message: 'User registered successfully. Please verify your email.' });
 };
+
 
 
 const postloginFacultyController = (req, res) => {
